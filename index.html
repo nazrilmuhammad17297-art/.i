@@ -1,0 +1,569 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Kelas XI TKJ</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<!-- Konfigurasi & Inisialisasi Firebase -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-analytics.js";
+  import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDoLQFt6DQC18qtGBPMXMUOctqZaXtMG80",
+    authDomain: "apaja-e1409.firebaseapp.com",
+    projectId: "apaja-e1409",
+    storageBucket: "apaja-e1409.firebasestorage.app",
+    messagingSenderId: "680028134342",
+    appId: "1:680028134342:web:071fe51eef3ae8d437b0c7",
+    measurementId: "G-CKJ8XFN0JP"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+  const db = getFirestore(app);
+
+  // Simpan fungsi database ke variabel global agar bisa diakses script bawah
+  window.db = db;
+  window.docRef = (col, id) => doc(db, col, id);
+  window.getDocData = getDoc;
+  window.setDocData = setDoc;
+
+  // Jalankan fungsi untuk memuat data cloud saat halaman siap
+  if (window.initCloudData) {
+    window.initCloudData();
+  }
+</script>
+
+<style>
+:root{--bg:#EEF2F7;--card:#F5F8FC;--navy:#0B3C5D;--teal:#0E7C7B;--cyan:#0891B2;--text:#0F172A;--muted:#475569;--line:#D5DDE8;--sh1:8px 8px 18px #cfd6e0,-8px -8px 18px #ffffff;--sh2:inset 3px 3px 8px #cfd6e0,inset -3px -3px 8px #ffffff;--hadir:#15803D;--izin:#B45309;--sakit:#1D4ED8;--alpa:#B91C1C}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{font-family:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);font-size:16px;line-height:1.5}
+button,select,input,label{font:inherit}
+button,select,input{min-height:44px}
+button{cursor:pointer;border:0;border-radius:14px;padding:10px 16px;background:var(--card);color:var(--text);box-shadow:var(--sh1);font-weight:700}
+button:disabled{opacity:.75;cursor:progress}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid var(--cyan);outline-offset:2px}
+.btn-p{background:linear-gradient(135deg,var(--navy),var(--teal));color:#fff}
+input,select{width:100%;padding:10px 14px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--text);box-shadow:var(--sh2)}
+label{display:grid;gap:6px;font-weight:600;color:var(--text)}
+.card{background:var(--card);border-radius:20px;padding:20px;box-shadow:var(--sh1);margin-bottom:18px}
+h1,h2,h3{margin:0 0 10px;line-height:1.25}
+h2{font-size:1.25rem;color:var(--navy)}
+h3{font-size:1.05rem;color:var(--navy)}
+.muted{color:var(--muted);font-size:.92rem}
+.spin{width:20px;height:20px;border:3px solid #cbd5e1;border-top-color:var(--teal);border-radius:50%;animation:spin .8s linear infinite;display:inline-block;vertical-align:middle}
+@keyframes spin{to{transform:rotate(360deg)}}
+.hidden{display:none!important}
+#login{min-height:100vh;display:grid;place-items:center;padding:20px}
+.login-box{width:100%;max-width:380px;margin:0}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:50px;height:50px;border-radius:16px;background:linear-gradient(135deg,var(--navy),var(--cyan));display:grid;place-items:center;color:#fff;font-weight:800;box-shadow:var(--sh1);flex:0 0 auto}
+.stack{display:grid;gap:14px;margin-top:16px}
+.err{color:var(--alpa);font-weight:600;min-height:1.4em}
+header{position:sticky;top:0;z-index:5;background:var(--bg);padding:12px 16px;display:flex;justify-content:space-between;align-items:center;gap:10px;box-shadow:0 4px 12px rgba(15,23,42,.06)}
+header .logo{width:40px;height:40px;font-size:.8rem;border-radius:12px}
+main{max-width:860px;margin:0 auto;padding:18px 16px 120px}
+nav{position:fixed;bottom:0;left:0;right:0;background:var(--card);display:flex;gap:4px;justify-content:space-between;padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px));box-shadow:0 -6px 18px rgba(15,23,42,.08);z-index:6;overflow-x:auto}
+nav button{box-shadow:none;background:transparent;font-size:.82rem;padding:6px 10px;min-width:64px;color:var(--muted)}
+nav button.on{color:var(--navy);background:var(--bg);box-shadow:var(--sh2)}
+.grid2{display:grid;gap:14px;grid-template-columns:1fr}
+@media(min-width:640px){.grid2{grid-template-columns:1fr 1fr}}
+.seg{display:flex;gap:6px}
+.seg button{min-width:48px;color:var(--text);box-shadow:none;padding:8px 10px;background:#E2E8F0}
+.seg button.on{color:#fff}
+.seg .H.on{background:var(--hadir)}
+.seg .I.on{background:var(--izin)}
+.seg .S.on{background:var(--sakit)}
+.seg .A.on{background:var(--alpa)}
+.row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.row:last-child{border-bottom:0}
+.chip{display:inline-block;padding:4px 12px;border-radius:999px;background:#D7F0EE;color:#0B4A49;font-weight:700;font-size:.85rem}
+.bar{height:10px;background:#E2E8F0;border-radius:99px;overflow:hidden;min-width:100px;box-shadow:var(--sh2)}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--teal),var(--cyan))}
+.tbl{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+td,th{padding:10px 6px;text-align:left;border-bottom:1px solid var(--line);font-size:.95rem;white-space:nowrap}
+th{color:var(--muted);font-size:.85rem}
+.tabs{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:12px}
+.tabs button{flex:0 0 auto}
+.tabs button.on{background:linear-gradient(135deg,var(--navy),var(--teal));color:#fff}
+.today{outline:2px solid var(--cyan);outline-offset:2px}
+.toast{position:fixed;left:50%;bottom:96px;transform:translateX(-50%);background:var(--navy);color:#fff;padding:10px 18px;border-radius:12px;display:none;z-index:9;font-weight:600}
+.task-l{display:flex;align-items:center;gap:12px;flex:1;min-width:200px;cursor:pointer}
+.task-l input[type=checkbox]{width:24px;height:24px;min-height:24px;flex:0 0 auto;accent-color:var(--teal)}
+.done strong{text-decoration:line-through;color:var(--muted)}
+.del{background:#FEE2E2;color:#7F1D1D;padding:8px 12px;min-width:44px}
+.form-row{display:grid;gap:12px;grid-template-columns:1fr}
+@media(min-width:640px){.form-row{grid-template-columns:2fr 1fr auto;align-items:end}}
+ol{margin:0;padding-left:22px}
+ol li{padding:4px 0}
+</style>
+</head>
+<body>
+
+<section id="login">
+  <div class="login-box card">
+    <div class="brand">
+      <div class="logo">TKJ</div>
+      <div><h1 style="margin:0">Kelas XI TKJ</h1><div class="muted">Sistem kelas digital</div></div>
+    </div>
+    <form id="fLogin" class="stack" autocomplete="on">
+      <label>Username<input id="u" autocomplete="username"></label>
+      <label>Password<input id="p" type="password" autocomplete="current-password"></label>
+      <div class="err" id="err" role="alert"></div>
+      <button class="btn-p" id="bLogin" type="submit">Masuk sebagai Admin</button>
+      <button type="button" id="bSiswa">Masuk sebagai Siswa</button>
+    </form>
+  </div>
+</section>
+
+<div id="app" class="hidden">
+  <header>
+    <div class="brand">
+      <div class="logo">TKJ</div>
+      <div><strong id="who"></strong><div class="muted" id="roleLbl"></div></div>
+    </div>
+    <button id="bOut">Keluar</button>
+  </header>
+  <main>
+    <div id="loading" class="card" style="text-align:center"><span class="spin"></span> <span>Memuat data dari Firebase…</span></div>
+    <section id="v-home" class="view"></section>
+    <section id="v-absen" class="view hidden"></section>
+    <section id="v-rekap" class="view hidden"></section>
+    <section id="v-jadwal" class="view hidden"></section>
+    <section id="v-piket" class="view hidden"></section>
+    <section id="v-kelas" class="view hidden"></section>
+    <section id="v-tugas" class="view hidden"></section>
+  </main>
+  <nav id="nav"></nav>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+const ADMIN = { u: 'nazril', p: 'admin1.' };
+const STUDENTS = [
+  'Adis Aqila Nurfawaz','Ahmad Faaih Aqila','Andika Persada','Angga Irawan','Arga Pratama Muhandar',
+  'Deril Ibrahim','Fahrizal','Iksan Nugraha Pratama','Kiki Ardiansah','M Istikhoni Abdurahman',
+  'Maulana Husni Solehudin','Muhamad Azmi Arvan Apriliano','Muhamad Fadilah','Muhamad Fradil Maulana Iqrom',
+  'Muhamad Lucky Purnama','Muhamad Nazril Abdurahman','Muhamad Rizki Fadilah','Muhamad Toyibur Rizki',
+  'Muhammad Anwar Syadad','Muhammad Azihad Rizki','Muhammad Fajar','Muhammad Satria Leviano',
+  'Muhammad Teguh Suhardiuanto','Nazam Satura Fikrah','Rangga Mulia Galih','Risma Wati Dewi',
+  'Rivan Ibrahim','Rafi Muwahid','Rahmat Tri Anggoro','Yopti Nugraha'
+];
+const HARI = ['Senin','Selasa','Rabu','Kamis','Jumat'];
+const JADWAL = {
+  Senin: ['AIJ','Informatika','PJOK'],
+  Selasa: ['ASJ','BI','PAIBP'],
+  Rabu: ['PPS','TWAN','BING'],
+  Kamis: ['SI','BK','BJPG','MTK'],
+  Jumat: ['KIK','BTQ']
+};
+const PIKET = {
+  Senin: ['Teguh','Rivan','Rangga','Anwar','Fradil','Nazam'],
+  Selasa: ['Rafi','Satria','Iksan','Rahmat','Hori','Nazril'],
+  Rabu: ['Fahrizal','Kiki','Husni','Azmi','Ajihad','Deril'],
+  Kamis: ['Faarih','Fajar','Fadil','Toyibur','Lucky','Risma','Dika'],
+  Jumat: ['Adis','Yopti','Angga','Arga','Rizki.F']
+};
+const ORG = [
+  ['Wali kelas','Muh. Riza Palupy, S.H'],
+  ['Ketua kelas','Rafi Muwahid'],
+  ['Wakil ketua kelas','Muhammad Azmi Arvan Apriliano'],
+  ['Sekretaris','Muhammad Toyibur Rizki & Risma Wati Dewi'],
+  ['Bendahara','Rivan Ibrahim'],
+  ['Seksi keamanan','Arga Pratama Muhandar'],
+  ['Seksi kebersihan','Kiki Ardiansyah']
+];
+const ST = { H: 'Hadir', I: 'Izin', S: 'Sakit', A: 'Alpa' };
+const MBLN = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+const pad = n => String(n).padStart(2, '0');
+const PERIODE = [['all','Seluruh periode'],['ganjil','Semester Ganjil (Jul–Des 2026)'],['genap','Semester Genap (Jan–Jun 2027)']];
+for (let m = 7; m <= 12; m++) PERIODE.push([`2026-${pad(m)}`, `${MBLN[m-1]} 2026`]);
+for (let m = 1; m <= 6; m++) PERIODE.push([`2027-${pad(m)}`, `${MBLN[m-1]} 2027`]);
+
+// Penyimpanan data yang terhubung ke Firebase Firestore
+let att = {};
+let tasks = [];
+let role = null, absenDate = '', jadwalHari = 'Senin', rekapP = 'all';
+
+// Fungsi sinkronisasi Cloud Firestore
+window.initCloudData = async function() {
+  try {
+    if (!window.db) return;
+    const attSnap = await window.getDocData(window.docRef('app_data', 'attendance'));
+    if (attSnap.exists()) att = attSnap.data().data || {};
+
+    const taskSnap = await window.getDocData(window.docRef('app_data', 'tasks'));
+    if (taskSnap.exists()) tasks = taskSnap.data().data || [];
+  } catch (e) {
+    console.error("Gagal sinkronisasi data dari Firebase:", e);
+  }
+};
+
+async function saveCloudAtt() {
+  try {
+    if (window.db) {
+      await window.setDocData(window.docRef('app_data', 'attendance'), { data: att });
+    }
+  } catch (e) {
+    console.error("Gagal menyimpan absensi ke Firebase:", e);
+  }
+}
+
+async function saveCloudTasks() {
+  try {
+    if (window.db) {
+      await window.setDocData(window.docRef('app_data', 'tasks'), { data: tasks });
+    }
+  } catch (e) {
+    console.error("Gagal menyimpan tugas ke Firebase:", e);
+  }
+}
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const wait = ms => new Promise(r => setTimeout(r, ms));
+const today = () => { const d = new Date(); return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`; };
+const todayHari = () => { const g = new Date().getDay(); return g >= 1 && g <= 5 ? HARI[g-1] : null; };
+const fmtDate = s => { const [y, m, d] = s.split('-'); return `${+d} ${MBLN[+m-1]} ${y}`; };
+
+function toast(msg) {
+  const t = $('toast'); t.textContent = msg; t.style.display = 'block';
+  clearTimeout(t._h); t._h = setTimeout(() => t.style.display = 'none', 1800);
+}
+
+/* ---------- LOGIN ---------- */
+$('fLogin').onsubmit = async e => {
+  e.preventDefault();
+  const b = $('bLogin');
+  $('err').textContent = '';
+  b.disabled = true; b.innerHTML = '<span class="spin"></span> Memeriksa…';
+  await wait(500);
+  if ($('u').value.trim().toLowerCase() === ADMIN.u && $('p').value === ADMIN.p) {
+    b.disabled = false; b.textContent = 'Masuk sebagai Admin';
+    start('admin');
+  } else {
+    $('err').textContent = 'Username atau password salah.';
+    b.disabled = false; b.textContent = 'Masuk sebagai Admin';
+  }
+};
+$('bSiswa').onclick = async () => {
+  const b = $('bSiswa');
+  b.disabled = true; b.innerHTML = '<span class="spin"></span> Memuat…';
+  await wait(300);
+  b.disabled = false; b.textContent = 'Masuk sebagai Siswa';
+  start('siswa');
+};
+$('bOut').onclick = () => {
+  role = null;
+  $('app').classList.add('hidden');
+  $('login').classList.remove('hidden');
+  $('u').value = ''; $('p').value = '';
+};
+
+async function start(r) {
+  role = r;
+  $('login').classList.add('hidden');
+  $('app').classList.remove('hidden');
+  $('loading').classList.remove('hidden');
+  $('who').textContent = r === 'admin' ? 'Admin (Nazril)' : 'Siswa';
+  $('roleLbl').textContent = r === 'admin' ? 'Mode admin · terhubung ke Firebase' : 'Mode siswa · data real-time';
+  
+  // Ambil data terbaru dari cloud sebelum render
+  await window.initCloudData();
+
+  absenDate = today();
+  jadwalHari = todayHari() || 'Senin';
+  buildNav();
+  await wait(200);
+  $('loading').classList.add('hidden');
+  go('home');
+}
+
+/* ---------- NAV ---------- */
+const VIEWS = [['home','Beranda'],['absen','Absensi'],['rekap','Rekap'],['jadwal','Jadwal'],['piket','Piket'],['kelas','Kelas'],['tugas','Tugas']];
+function buildNav() {
+  $('nav').innerHTML = VIEWS.map(([k, l]) => `<button data-v="${k}">${l}</button>`).join('');
+}
+$('nav').onclick = e => { const b = e.target.closest('button'); if (b) go(b.dataset.v); };
+
+function go(v) {
+  document.querySelectorAll('nav button').forEach(b => {
+    b.classList.toggle('on', b.dataset.v === v);
+    b.setAttribute('aria-current', b.dataset.v === v ? 'page' : 'false');
+  });
+  document.querySelectorAll('.view').forEach(s => s.classList.toggle('hidden', s.id !== 'v-' + v));
+  RENDER[v]();
+  window.scrollTo(0, 0);
+}
+const RENDER = {};
+
+/* ---------- BERANDA ---------- */
+RENDER.home = function () {
+  const t = todayHari(), r = att[today()] || {};
+  const cnt = { H: 0, I: 0, S: 0, A: 0 };
+  STUDENTS.forEach((_, i) => { if (r[i]) cnt[r[i]]++; });
+  const belum = STUDENTS.length - Object.keys(r).length;
+  const pend = tasks.filter(x => !x.done).length;
+  $('v-home').innerHTML = `
+    <div class="card">
+      <h2>Halo, ${role === 'admin' ? 'Admin' : 'Siswa'}</h2>
+      <div class="muted">${t ? 'Hari ' + t : 'Akhir pekan'} · ${fmtDate(today())}</div>
+    </div>
+    <div class="grid2">
+      <div class="card"><h3>Jadwal hari ini</h3>
+        ${t ? `<ol>${JADWAL[t].map(s => `<li>${esc(s)}</li>`).join('')}</ol>` : '<div class="muted">Tidak ada jadwal.</div>'}
+      </div>
+      <div class="card"><h3>Piket hari ini</h3>
+        ${t ? `<ol>${PIKET[t].map(n => `<li>${esc(n)}</li>`).join('')}</ol>` : '<div class="muted">-</div>'}
+      </div>
+      <div class="card"><h3>Absensi hari ini</h3>
+        <div class="seg-sum" style="display:flex;flex-wrap:wrap;gap:8px">
+          <span class="chip">Hadir ${cnt.H}</span>
+          <span class="chip">Izin ${cnt.I}</span>
+          <span class="chip">Sakit ${cnt.S}</span>
+          <span class="chip">Alpa ${cnt.A}</span>
+          <span class="chip">Belum ${belum}</span>
+        </div>
+      </div>
+      <div class="card"><h3>Tugas</h3>
+        <p style="margin:0 0 12px">${pend} tugas belum selesai</p>
+        <button class="btn-p" onclick="go('tugas')">Lihat tugas</button>
+      </div>
+    </div>`;
+};
+
+/* ---------- ABSENSI ---------- */
+RENDER.absen = function () {
+  const rec = att[absenDate] || {};
+  $('v-absen').innerHTML = `
+    <div class="card">
+      <h2>Absensi Harian</h2>
+      <div class="grid2">
+        <label>Tanggal<input type="date" id="absenDateInput" value="${absenDate}"></label>
+        <div class="muted" style="align-self:end">${role === 'admin' ? 'Ketuk H, I, S, atau A untuk mencatat. Tersimpan otomatis ke Cloud.' : 'Mode siswa: hanya melihat.'}</div>
+      </div>
+    </div>
+    <div class="card" id="listAbsen">
+      ${STUDENTS.map((n, i) => {
+        const s = rec[i] || '';
+        return `<div class="row">
+          <div style="flex:1;min-width:200px"><strong>${i+1}. ${esc(n)}</strong>
+            <div class="muted">${s ? ST[s] : 'Belum dicatat'}</div></div>
+          ${role === 'admin'
+            ? `<div class="seg" data-i="${i}" role="group" aria-label="Status ${esc(n)}">${['H','I','S','A'].map(k =>
+                `<button class="${k} ${s === k ? 'on' : ''}" data-k="${k}" aria-pressed="${s === k}" title="${ST[k]}">${k}</button>`).join('')}</div>`
+            : (s ? `<span class="chip">${ST[s]}</span>` : '')}
+        </div>`;
+      }).join('')}
+    </div>`;
+
+  const dateInput = $('absenDateInput');
+  if (dateInput) {
+    dateInput.onchange = e => {
+      absenDate = e.target.value;
+      RENDER.absen();
+    };
+  }
+
+  if (role === 'admin') {
+    $('v-absen').onclick = async e => {
+      const btn = e.target.closest('button[data-k]');
+      if (!btn) return;
+      const seg = btn.closest('.seg');
+      const i = seg.dataset.i;
+      const k = btn.dataset.k;
+
+      if (!att[absenDate]) att[absenDate] = {};
+      if (att[absenDate][i] === k) {
+        delete att[absenDate][i];
+      } else {
+        att[absenDate][i] = k;
+      }
+
+      btn.disabled = true;
+      toast('Menyimpan ke Firebase...');
+      await saveCloudAtt();
+      btn.disabled = false;
+      RENDER.absen();
+      toast('Berhasil disimpan!');
+    };
+  }
+};
+
+/* ---------- REKAP ---------- */
+function rng(v) {
+  if (v === 'all') return ['0', 'z'];
+  if (v === 'ganjil') return ['2026-07-01', '2026-12-31'];
+  if (v === 'genap') return ['2027-01-01', '2027-06-30'];
+  return [v + '-01', v + '-31'];
+}
+RENDER.rekap = function () {
+  const [a, b] = rng(rekapP);
+  const c = STUDENTS.map(() => ({ H: 0, I: 0, S: 0, A: 0 }));
+  for (const d in att) {
+    if (d < a || d > b) continue;
+    for (const i in att[d]) {
+      const s = att[d][i];
+      if (c[i] && c[i][s] !== undefined) c[i][s]++;
+    }
+  }
+  const rows = STUDENTS.map((n, i) => {
+    const t = c[i].H + c[i].I + c[i].S + c[i].A;
+    const p = t ? Math.round(c[i].H * 100 / t) : 0;
+    const lbl = !t ? '-' : p >= 85 ? 'Baik' : p >= 75 ? 'Perlu perhatian' : 'Kurang';
+    return { n, ...c[i], t, p, lbl };
+  });
+  const adaData = rows.some(r => r.t > 0);
+  const withData = rows.filter(r => r.t > 0);
+  const avg = withData.length ? Math.round(withData.reduce((s, r) => s + r.p, 0) / withData.length) : 0;
+  $('v-rekap').innerHTML = `
+    <div class="card">
+      <h2>Rekap Kehadiran</h2>
+      <label>Periode
+        <select id="rekapP">${PERIODE.map(([v, l]) => `<option value="${v}" ${v === rekapP ? 'selected' : ''}>${l}</option>`).join('')}</select>
+      </label>
+      <p class="muted" style="margin:12px 0 0">Persentase = Hadir ÷ total pencatatan.</p>
+    </div>
+    ${adaData ? `
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:8px">
+        <strong>Rata-rata kelas</strong><span class="chip">${avg}%</span>
+      </div>
+      <div class="tbl"><table>
+        <thead><tr><th>No</th><th>Nama</th><th>H</th><th>I</th><th>S</th><th>A</th><th>Persen</th><th>Keterangan</th></tr></thead>
+        <tbody>${rows.map((r, i) => `<tr>
+          <td>${i+1}</td><td>${esc(r.n)}</td><td>${r.H}</td><td>${r.I}</td><td>${r.S}</td><td>${r.A}</td>
+          <td><div style="display:flex;align-items:center;gap:8px"><div class="bar"><i style="width:${r.p}%"></i></div><strong>${r.t ? r.p + '%' : '-'}</strong></div></td>
+          <td>${r.lbl}</td></tr>`).join('')}</tbody>
+      </table></div>
+    </div>` : `<div class="card"><div class="muted">Belum ada data absensi pada periode ini.</div></div>`}`;
+
+  const sel = $('rekapP');
+  if (sel) {
+    sel.onchange = e => {
+      rekapP = e.target.value;
+      RENDER.rekap();
+    };
+  }
+};
+
+/* ---------- JADWAL ---------- */
+RENDER.jadwal = function () {
+  $('v-jadwal').innerHTML = `
+    <div class="card">
+      <h2>Jadwal Pelajaran</h2>
+      <div class="tabs" role="tablist">${HARI.map(h =>
+        `<button role="tab" data-hari="${h}" class="${h === jadwalHari ? 'on' : ''}" aria-selected="${h === jadwalHari}">${h}</button>`).join('')}</div>
+      ${JADWAL[jadwalHari].map((s, i) => `<div class="row"><span><strong>${i+1}.</strong> ${esc(s)}</span></div>`).join('')}
+    </div>`;
+
+  const tabs = document.querySelectorAll('#v-jadwal .tabs button');
+  tabs.forEach(btn => {
+    btn.onclick = () => {
+      jadwalHari = btn.dataset.hari;
+      RENDER.jadwal();
+    };
+  });
+};
+
+/* ---------- PIKET ---------- */
+RENDER.piket = function () {
+  const t = todayHari();
+  $('v-piket').innerHTML = `
+    <div class="card"><h2>Jadwal Piket</h2><div class="muted">Hari ini ditandai dengan garis biru.</div></div>
+    <div class="grid2">${HARI.map(h => `
+      <div class="card ${h === t ? 'today' : ''}">
+        <h3>${h}${h === t ? ' · Hari ini' : ''}</h3>
+        <ol>${PIKET[h].map(n => `<li>${esc(n)}</li>`).join('')}</ol>
+      </div>`).join('')}</div>`;
+};
+
+/* ---------- KELAS ---------- */
+RENDER.kelas = function () {
+  $('v-kelas').innerHTML = `
+    <div class="card">
+      <h2>Organisasi Kelas</h2>
+      ${ORG.map(([j, n]) => `<div class="row"><span class="muted">${j}</span><strong>${esc(n)}</strong></div>`).join('')}
+    </div>
+    <div class="card">
+      <h2>Daftar Siswa</h2>
+      <p class="muted" style="margin:0 0 8px">Jumlah: ${STUDENTS.length} siswa</p>
+      <ol>${STUDENTS.map(n => `<li>${esc(n)}</li>`).join('')}</ol>
+    </div>`;
+};
+
+/* ---------- TUGAS ---------- */
+RENDER.tugas = function () {
+  const sorted = [...tasks].sort((a, b) => (a.done - b.done) || (a.due || '9').localeCompare(b.due || '9'));
+  $('v-tugas').innerHTML = `
+    ${role === 'admin' ? `
+    <div class="card">
+      <h2>Tambah Tugas</h2>
+      <form id="fTugas" class="form-row">
+        <label>Judul tugas<input id="tTitle" placeholder="Contoh: Latihan subnetting" required></label>
+        <label>Tenggat<input type="date" id="tDue"></label>
+        <button class="btn-p" type="submit">Tambah</button>
+      </form>
+    </div>` : ''}
+    <div class="card">
+      <h2>Daftar Tugas</h2>
+      ${sorted.length ? sorted.map(t => `
+        <div class="row ${t.done ? 'done' : ''}">
+          <label class="task-l">
+            <input type="checkbox" data-task="${t.id}" ${t.done ? 'checked' : ''}>
+            <span><strong>${esc(t.title)}</strong><br><span class="muted">${t.due ? 'Tenggat: ' + fmtDate(t.due) : 'Tanpa tenggat'}</span></span>
+          </label>
+          ${role === 'admin' ? `<button class="del" data-del="${t.id}" title="Hapus tugas">Hapus</button>` : ''}
+        </div>`).join('') : '<div class="muted">Belum ada tugas.</div>'}
+    </div>`;
+
+  const fTugas = $('fTugas');
+  if (fTugas) {
+    fTugas.onsubmit = async e => {
+      e.preventDefault();
+      const title = $('tTitle').value.trim();
+      const due = $('tDue').value;
+      if (!title) return;
+      tasks.push({ id: '_' + Math.random().toString(36).substr(2, 9), title, due, done: false });
+      
+      toast('Menyimpan tugas...');
+      await saveCloudTasks();
+      RENDER.tugas();
+      toast('Tugas berhasil ditambah!');
+    };
+  }
+
+  $('v-tugas').onchange = async e => {
+    const chk = e.target.closest('input[type=checkbox]');
+    if (!chk) return;
+    const id = chk.dataset.task;
+    const t = tasks.find(x => x.id === id);
+    if (t) {
+      t.done = chk.checked;
+      await saveCloudTasks();
+      RENDER.tugas();
+    }
+  };
+
+  if (role === 'admin') {
+    $('v-tugas').onclick = async e => {
+      const btn = e.target.closest('button[data-del]');
+      if (!btn) return;
+      const id = btn.dataset.del;
+      tasks = tasks.filter(x => x.id !== id);
+      toast('Menghapus tugas...');
+      await saveCloudTasks();
+      RENDER.tugas();
+      toast('Tugas dihapus.');
+    };
+  }
+};
+</script>
+</body>
+</html>
